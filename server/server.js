@@ -215,34 +215,48 @@ app.post('/api/hostels', authenticateToken, async (req, res) => {
 });
 
 // Update hostel
-app.put('/admin/hostels/:id', authMiddleware, (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
-  const hostel = hostels.find(h => h._id === id);
-  if (!hostel) return res.status(404).json({ message: 'Hostel not found' });
+app.put('/api/hostels/:id', authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') return res.status(403).json({ message: 'Access denied' });
 
-  hostel.name = name || hostel.name;
-  res.json({ message: 'Hostel updated', hostel });
+    const hostel = await Hostel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!hostel) return res.status(404).json({ message: 'Hostel not found' });
+
+    res.json({ message: 'Hostel updated', hostel });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
 // Toggle hostel status
-app.put('/admin/hostels/:id/toggle-status', authMiddleware, (req, res) => {
-  const { id } = req.params;
-  const hostel = hostels.find(h => h._id === id);
-  if (!hostel) return res.status(404).json({ message: 'Hostel not found' });
+app.put('/api/hostels/:id/toggle-status', authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') return res.status(403).json({ message: 'Access denied' });
 
-  hostel.status = !hostel.status;
-  res.json({ message: 'Status toggled', hostel });
+    const hostel = await Hostel.findById(req.params.id);
+    if (!hostel) return res.status(404).json({ message: 'Hostel not found' });
+
+    hostel.isActive = !hostel.isActive;
+    await hostel.save();
+
+    res.json({ message: 'Hostel status toggled', hostel });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
 // Delete hostel
-app.delete('/admin/hostels/:id', authMiddleware, (req, res) => {
-  const { id } = req.params;
-  const index = hostels.findIndex(h => h._id === id);
-  if (index === -1) return res.status(404).json({ message: 'Hostel not found' });
+app.delete('/api/hostels/:id', authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') return res.status(403).json({ message: 'Access denied' });
 
-  hostels.splice(index, 1);
-  res.json({ message: 'Hostel deleted' });
+    const hostel = await Hostel.findByIdAndDelete(req.params.id);
+    if (!hostel) return res.status(404).json({ message: 'Hostel not found' });
+
+    res.json({ message: 'Hostel deleted', hostel });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
 
