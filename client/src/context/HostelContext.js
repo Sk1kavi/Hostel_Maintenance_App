@@ -8,20 +8,25 @@ export const HostelProvider = ({ children }) => {
   const [hostels, setHostels] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const API_URL =  'http://192.168.42.238:5000/api';
+const API_URL = 'https://hostel-maintenance-app.onrender.com/api'; // Change this to your server URL
 
   // Fetch all hostels
   const fetchHostels = async () => {
     setLoading(true);
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const res = await fetch(`${API_URL}/api/hostels`, {
+      const res = await fetch(`${API_URL}/hostels`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const data = await res.json();
-      if (res.ok) setHostels(data.hostels || []);
-      else Alert.alert("Error", data.message || "Failed to fetch hostels");
+      if (res.ok) {
+  setHostels(data.hostels);
+} else {
+  setHostels([]); // fallback
+  Alert.alert("Error", data.message || "Failed to fetch hostels");
+}
+
     } catch (err) {
       console.error("fetchHostels error:", err);
       Alert.alert("Error", "Network error occurred");
@@ -34,7 +39,7 @@ export const HostelProvider = ({ children }) => {
   const createHostel = async (formData) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const res = await fetch(`${API_URL}/api/hostels`, {
+      const res = await fetch(`${API_URL}/hostels`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -62,7 +67,7 @@ export const HostelProvider = ({ children }) => {
   const updateHostel = async (id, formData) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const res = await fetch(`${API_URL}/api/admin/hostels/${id}`, {
+      const res = await fetch(`${API_URL}/admin/hostels/${id}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -90,7 +95,7 @@ export const HostelProvider = ({ children }) => {
   const toggleHostelStatus = async (id) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const res = await fetch(`${API_URL}/api/admin/hostels/${id}/toggle-status`, {
+      const res = await fetch(`${API_URL}/admin/hostels/${id}/toggle-status`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -114,7 +119,7 @@ export const HostelProvider = ({ children }) => {
   const deleteHostel = async (id) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const res = await fetch(`${API_URL}/api/admin/hostels/${id}`, {
+      const res = await fetch(`${API_URL}/admin/hostels/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -139,7 +144,7 @@ export const HostelProvider = ({ children }) => {
       value={{
         hostels,
         loading,
-        fetchHostels,
+        getHostels: fetchHostels,
         createHostel,
         updateHostel,
         toggleHostelStatus,
