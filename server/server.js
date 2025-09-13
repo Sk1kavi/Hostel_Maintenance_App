@@ -214,6 +214,37 @@ app.post('/api/hostels', authenticateToken, async (req, res) => {
   }
 });
 
+// Update hostel
+app.put('/admin/hostels/:id', authMiddleware, (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  const hostel = hostels.find(h => h._id === id);
+  if (!hostel) return res.status(404).json({ message: 'Hostel not found' });
+
+  hostel.name = name || hostel.name;
+  res.json({ message: 'Hostel updated', hostel });
+});
+
+// Toggle hostel status
+app.put('/admin/hostels/:id/toggle-status', authMiddleware, (req, res) => {
+  const { id } = req.params;
+  const hostel = hostels.find(h => h._id === id);
+  if (!hostel) return res.status(404).json({ message: 'Hostel not found' });
+
+  hostel.status = !hostel.status;
+  res.json({ message: 'Status toggled', hostel });
+});
+
+// Delete hostel
+app.delete('/admin/hostels/:id', authMiddleware, (req, res) => {
+  const { id } = req.params;
+  const index = hostels.findIndex(h => h._id === id);
+  if (index === -1) return res.status(404).json({ message: 'Hostel not found' });
+
+  hostels.splice(index, 1);
+  res.json({ message: 'Hostel deleted' });
+});
+
 
 // Complaint Routes
 app.get('/api/complaints', authenticateToken, async (req, res) => {
