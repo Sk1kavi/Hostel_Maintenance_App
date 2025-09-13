@@ -204,11 +204,12 @@ const HostelManagementScreen = ({ navigation }) => {
       </View>
 
       {/* Stats */}
-      <View style={styles.statsHeader}>
-        <Text style={styles.statsText}>
-          Total Hostels: {hostels.length} | Active: {hostels.filter((h) => h.isActive).length}
-        </Text>
-      </View>
+    <View style={styles.statsHeader}>
+  <Text style={styles.statsText}>
+    Total Hostels: {hostels?.length || 0} | Active: {hostels?.filter((h) => h.isActive).length || 0}
+  </Text>
+</View>
+
 
       {/* List */}
       <FlatList

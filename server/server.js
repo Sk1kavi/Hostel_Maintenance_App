@@ -194,7 +194,7 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/hostels', async (req, res) => {
   try {
     const hostels = await Hostel.find({ isActive: true });
-    res.json(hostels);
+    res.json({hostels});
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
