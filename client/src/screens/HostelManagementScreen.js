@@ -14,7 +14,6 @@ import {
   Switch,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useHostel } from "../context/HostelContext"; // ✅ import context
 
 const HostelManagementScreen = ({ navigation }) => {
   const {

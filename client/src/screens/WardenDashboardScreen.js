@@ -15,6 +15,8 @@ import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useAuth, API_URL } from '../context/AuthContext';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+
 
 const WardenDashboardScreen = ({ navigation }) => {
   const [complaints, setComplaints] = useState([]);
@@ -43,16 +45,25 @@ const WardenDashboardScreen = ({ navigation }) => {
   }, [complaints, statusFilter, categoryFilter]);
 
   const fetchComplaints = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/complaints`);
-      setComplaints(response.data);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to load complaints');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+  try {
+    const token = await AsyncStorage.getItem("token");
+ // get token from storage
+    const response = await axios.get(`${API_URL}/complaints`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setComplaints(response.data);
+  } catch (error) {
+    console.error("Error fetching complaints:", error.response?.data || error.message);
+    Alert.alert('Error', 'Failed to load complaints');
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+};
+
 
   const applyFilters = () => {
     let filtered = [...complaints];

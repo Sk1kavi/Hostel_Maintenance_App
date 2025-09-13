@@ -8,7 +8,7 @@ export const HostelProvider = ({ children }) => {
   const [hostels, setHostels] = useState([]);
   const [loading, setLoading] = useState(false);
 
-const API_URL = 'https://hostel-maintenance-app.onrender.com/api'; // Change this to your server URL
+const API_URL = 'https://hostel-maintenance-app.onrender.com/api'; 
 
   // Fetch all hostels
   const fetchHostels = async () => {

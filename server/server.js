@@ -224,7 +224,7 @@ app.get('/api/complaints', authenticateToken, async (req, res) => {
     if (user.role === 'student') {
       query.createdBy = req.user.userId;
     } else if (user.role === 'warden') {
-      query.hostel = user.hostel;
+      query.hostel = req.user.hostel;
     }
     // Admin can see all complaints (no filter)
 
