@@ -47,6 +47,7 @@ const WardenDashboardScreen = ({ navigation }) => {
   const fetchComplaints = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
+    console.log("Fetched token:", token);
  // get token from storage
     const response = await axios.get(`${API_URL}/complaints`, {
       headers: {

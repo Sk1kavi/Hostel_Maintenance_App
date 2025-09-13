@@ -221,10 +221,15 @@ app.get('/api/complaints', authenticateToken, async (req, res) => {
     let query = {};
     const user = await User.findById(req.user.userId);
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     if (user.role === 'student') {
       query.createdBy = req.user.userId;
     } else if (user.role === 'warden') {
-      query.hostel = req.user.hostel;
+      // Use regex for case-insensitive and trimmed string matching
+      query.hostel = { $regex: `^${user.hostel.trim()}$`, $options: 'i' };
     }
     // Admin can see all complaints (no filter)
 
@@ -236,6 +241,7 @@ app.get('/api/complaints', authenticateToken, async (req, res) => {
 
     res.json(complaints);
   } catch (error) {
+    console.error('Error fetching complaints:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
