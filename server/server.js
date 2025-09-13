@@ -109,7 +109,7 @@ const authenticateToken = (req, res, next) => {
 
 // Routes
 
-// Authentication Routes
+// register and login Routes
 app.post('/api/register', async (req, res) => {
   try {
     const { name, email, password, role, hostel, roomNumber, department, yearOfStudy, rollNumber } = req.body;
@@ -191,6 +191,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Hostel Routes
+//list all hostels
 app.get('/api/hostels', async (req, res) => {
   try {
     const hostels = await Hostel.find({ isActive: true });
@@ -200,6 +201,7 @@ app.get('/api/hostels', async (req, res) => {
   }
 });
 
+//create hostel
 app.post('/api/hostels', authenticateToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -261,6 +263,7 @@ app.delete('/api/hostels/:id', authenticateToken, async (req, res) => {
 
 
 // Complaint Routes
+//fetch complaint based on role
 app.get('/api/complaints', authenticateToken, async (req, res) => {
   try {
     let query = {};
@@ -276,7 +279,6 @@ app.get('/api/complaints', authenticateToken, async (req, res) => {
       // Use regex for case-insensitive and trimmed string matching
       query.hostel = { $regex: `^${user.hostel.trim()}$`, $options: 'i' };
     }
-    // Admin can see all complaints (no filter)
 
     const complaints = await Complaint.find(query)
       .populate('createdBy', 'name email')
@@ -291,6 +293,7 @@ app.get('/api/complaints', authenticateToken, async (req, res) => {
   }
 });
 
+//create complaint
 app.post('/api/complaints', authenticateToken, upload.array('images', 5), async (req, res) => {
   try {
     if (req.user.role !== 'student') {
@@ -317,6 +320,7 @@ app.post('/api/complaints', authenticateToken, upload.array('images', 5), async 
   }
 });
 
+//get complaint by id
 app.get('/api/complaints/:id', authenticateToken, async (req, res) => {
   try {
     const complaint = await Complaint.findById(req.params.id)
@@ -345,6 +349,7 @@ app.get('/api/complaints/:id', authenticateToken, async (req, res) => {
   }
 });
 
+//update status
 app.put('/api/complaints/:id', authenticateToken, async (req, res) => {
   try {
     const { status, comment } = req.body;
@@ -385,6 +390,7 @@ app.put('/api/complaints/:id', authenticateToken, async (req, res) => {
 });
 
 // Profile Routes
+//fetch profile
 app.get('/api/profile', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('-password');
@@ -394,6 +400,7 @@ app.get('/api/profile', authenticateToken, async (req, res) => {
   }
 });
 
+//update profile
 app.put('/api/profile', authenticateToken, async (req, res) => {
   try {
     const { name, roomNumber, department, yearOfStudy } = req.body;
@@ -413,6 +420,7 @@ app.put('/api/profile', authenticateToken, async (req, res) => {
   }
 });
 
+//change password
 app.put('/api/change-password', authenticateToken, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -433,6 +441,7 @@ app.put('/api/change-password', authenticateToken, async (req, res) => {
 });
 
 // Admin Routes
+//fetch users
 app.get('/api/admin/users', authenticateToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {

@@ -23,7 +23,7 @@ const API_URL = 'https://hostel-maintenance-app.onrender.com/api';
       if (res.ok) {
   setHostels(data.hostels);
 } else {
-  setHostels([]); // fallback
+  setHostels([]); 
   Alert.alert("Error", data.message || "Failed to fetch hostels");
 }
 

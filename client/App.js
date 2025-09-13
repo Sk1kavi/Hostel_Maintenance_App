@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthProvider } from './src/context/AuthContext';
 import { HostelProvider } from './src/context/HostelContext';  
-
 import RoleSelectionScreen from './src/screens/RoleSelectionScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';

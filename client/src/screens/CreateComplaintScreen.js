@@ -45,7 +45,6 @@ const CreateComplaintScreen = ({ navigation }) => {
   ];
 
   React.useEffect(() => {
-    // Pre-fill room number from user profile
     if (user?.roomNumber) {
       setFormData(prev => ({
         ...prev,

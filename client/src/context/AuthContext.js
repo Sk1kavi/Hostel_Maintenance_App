@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
-export const API_URL = 'https://hostel-maintenance-app.onrender.com/api'; // Change this to your server URL
+export const API_URL = 'https://hostel-maintenance-app.onrender.com/api'; 
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

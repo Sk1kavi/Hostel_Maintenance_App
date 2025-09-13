@@ -83,7 +83,7 @@ const UserManagementScreen = ({ navigation }) => {
               );
 
               if (response.ok) {
-                fetchUsers(); // Refresh the list
+                fetchUsers(); 
                 Alert.alert('Success', 'User status updated successfully');
               } else {
                 Alert.alert('Error', 'Failed to update user status');
